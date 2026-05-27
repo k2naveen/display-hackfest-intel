@@ -1,5 +1,7 @@
 # Pipe Joiner as a Power Optimization Mechanism in Intel Display Pipeline
 
+[← 2026](2026)
+
 ## 1. Background
 
 Modern Intel display hardware includes the concept of a **Pipe Joiner**, where two display pipes are combined to drive a single output.

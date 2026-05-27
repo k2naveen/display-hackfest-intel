@@ -1,5 +1,7 @@
 # Judder with low-fps video playback under VRR
 
+[← 2026](2026)
+
 ## Overview
 
 - On a 4K60 panel with a 40 to 60 Hz VRR window, refresh can vary only between
