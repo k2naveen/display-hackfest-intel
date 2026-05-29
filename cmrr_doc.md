@@ -19,10 +19,9 @@ Audio/Video drift, forcing compositors to drop or repeat frames.
 
 CMRR (Content Match Refresh Rate) is an Intel hardware feature that uses the
 Adaptive Sync Timing Generator in fixed-mode to **dither vtotal** across frames.
-By alternating between vtotal and (vtotal + 1) in a precisely controlled ratio
-(defined by M/N parameters), the hardware produces an *average* refresh rate
-that exactly equals the fractional target — without any single-frame timing
-violation visible to the panel.
+By alternating between vtotal and (vtotal + 1) in a precisely controlled ratio,
+the hardware produces an *average* refresh rate that exactly equals the
+fractional target — without any single-frame timing violation visible to the panel.
 
 **Key benefit:** Eliminates audio/video sync drift on media playback
 (e.g., 23.976 Hz, 29.97 Hz, 59.94 Hz content).
@@ -62,27 +61,16 @@ The CMRR hardware dithers vtotal on a per-frame basis:
 - Some frames use `vtotal`
 - Some frames use `vtotal + 1`
 
-The ratio of short-to-long frames is controlled by the M/N parameters such that
-the *average* refresh rate over N frames equals the exact fractional target.
+The ratio of short-to-long frames is controlled such that the
+*average* refresh rate over N frames equals the exact fractional target.
 
-```
-Average refresh = pixel_clock × M / N
-
-Where:
-  N = desired_refresh_rate × htotal × multiplier_n
-  M = pixel_clock × 1000 × multiplier_m / N  (remainder from division)
-```
-
-For 59.94 Hz: multiplier_m=1000, multiplier_n=1001
-→ effective rate = 60 × 1000/1001 = 59.94005994… Hz ✓
-
----
 
 ## 4. Expectation from Userspace
 
-The kernel driver computes and programs the CMRR M/N registers, but it needs
-userspace (compositor or media framework) to communicate the desired target
-refresh rate including its fractional component. Two approaches are proposed:
+The kernel driver needs userspace (compositor or media framework) to communicate
+the desired target refresh rate including its fractional component.
+
+Two approaches are proposed:
 
 ### 4.1 Approach 1: Enumerated Scaling Levels
 
@@ -121,7 +109,6 @@ refresh rate as a rational number.
 **How it works:**
 
 The target refresh rate = NUMERATOR / DENOMINATOR (in Hz).
-The kernel computes appropriate M/N values from this ratio.
 
 | Target Rate | Numerator | Denominator | Result |
 |-------------|-----------|-------------|--------|
