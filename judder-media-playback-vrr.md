@@ -7,18 +7,18 @@
 - VRR displays are great for games, where frame production is inherently
 irregular, but fixed-cadence video can still judder if the display pipeline
 doesn't pace frames correctly.
-- For example, on a 40-60 Hz VRR panel I noticed unmistakable judder when
-playing 30 fps content in mpv on Wayland. 50 fps content looked fine.
+- For example, on a 40-60 Hz VRR panel, we noticed judder when playing 30 fps
+content in mpv on Wayland.
 
 ### Media playback judder
 ![](/images/judder_with_media_playback_vrr.png)
 
-- On a 40-60 Hz VRR panel, refresh rate can vary only between 16.67 ms and 25 ms.
+- On a 40-60 Hz VRR panel, refresh interval can vary only between 16.67 ms and 25 ms.
 - But 30 fps video delivers a new frame every 33.33 ms, which falls below the
-panel’s minimum VRR rate.
+panel’s minimum VRR range.
 - Because of this, frames cannot be displayed at a uniform cadence and instead
 alternate between longer and shorter display times, about 41.67 (25+16.67) ms and 25 ms.
-- The average frame rate remains correct, but the uneven frame pacing appears
+- The average frame timing remains correct, but the uneven frame pacing appears
 as visible judder.
 
 ## What can userspace do to fix this?
@@ -42,5 +42,5 @@ target_hz.
 ![](/images/fix_judder_with_media_playback_vrr.png)
 
 ## More details
-To fix this, I carried out a PoC, you can check the full implementation details
+To fix this, we carried out a PoC, you can check the full implementation details
 here: [Fixing judder issue with video playback](https://k2naveen.github.io/wayland/vrr/2026/05/23/fixing-judder-issue-with-video-playback.html)
