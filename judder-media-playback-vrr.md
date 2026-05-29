@@ -13,25 +13,26 @@ content in mpv on Wayland.
 ### Media playback judder
 ![](/images/judder_with_media_playback_vrr.png)
 
-- On a 40-60 Hz VRR panel, refresh interval can vary only between 16.67 ms and 25 ms.
-- But 30 fps video delivers a new frame every 33.33 ms, which falls below the
-panel’s minimum VRR range.
+- On a 40-60 Hz VRR panel, refresh interval can vary only between 16.67 ms and
+25 ms.
+- A 30 fps video delivers a new frame every 33.33 ms, which is longer than that
+limit and therefore outside the panel’s VRR operating window.
 - Because of this, frames cannot be displayed at a uniform cadence and instead
 alternate between longer and shorter display times, about 41.67 (25+16.67) ms and 25 ms.
 - The average frame timing remains correct, but the uneven frame pacing appears
 as visible judder.
 
 ## What can userspace do to fix this?
-- The client or media player passes the content frame rate using a new
-[content-frame-rate-v1](https://gitlab.freedesktop.org/NaveenKumar/wayland-protocols/-/commits/test-content-frame-rate?ref_type=heads) protocol to the compositor.
+- The client or media player passes the content frame rate (a rational frame rate numerator / denominator) using a new
+[wp-content-frame-rate-v1](https://gitlab.freedesktop.org/NaveenKumar/wayland-protocols/-/commits/test-content-frame-rate?ref_type=heads) protocol to the compositor.
 
 - The compositor should do the low framerate compensation (LFC) to choose the
 smallest stable refresh multiple that fits within the VRR range.
 
 - For 30 fps content on a 40 to 60 Hz panel, that target becomes 60 Hz, so each
-video frame is shown for exactly two scanouts.
+video frame will be shown for exactly two scanouts.
 
-- This restores a stable presentation cadence and removes judder.
+- This should restore a stable presentation cadence and removes judder.
 
 - The compositors can implement this by deriving a virtual display mode from the
 current KMS mode and [retiming vtotal, vsync_start, vsync_end, and vrefresh](https://gitlab.gnome.org/naveenk2/mutter/-/commit/4598557c5d2ec60b42ed3ffb4b6eb1e87357212b#line_229db3239_A169) to
